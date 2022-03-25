@@ -1,15 +1,9 @@
-import { App } from './app';
+import { App, IOptions } from './app';
 import { StorageService } from './services/StorageService';
 
-const main = () => {
-  document.addEventListener('DOMContentLoaded', () => {
-    const app = new App(
-      {
-        onSuccess: () => console.log('Goal'),
-      },
-      new StorageService(),
-    );
-  });
+const main = (options: IOptions) => {
+  // eslint-disable-next-line
+  new App(options, new StorageService());
 };
 
-main();
+export default main;

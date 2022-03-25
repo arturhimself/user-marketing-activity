@@ -1,4 +1,4 @@
-import { IStorage } from '../ports/IStorage';
+import { IStorage } from '../app/ports/IStorage';
 
 const STORAGE_NAME = 'activityStep';
 

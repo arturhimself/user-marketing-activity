@@ -2,15 +2,22 @@ const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = (_, argv) => {
   const isProd = argv.mode === 'production';
 
   const config = {
+    mode: argv.mode || 'development',
     entry: './src/main.ts',
     output: {
       path: path.resolve(__dirname, 'build'),
       filename: isProd ? 'index.js' : 'bundle-[hash].js',
+      library: {
+        name: 'activity',
+        type: 'window',
+        export: 'default',
+      }
     },
     resolve: {
       extensions: ['.ts', '.js'],
@@ -44,7 +51,7 @@ module.exports = (_, argv) => {
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         template: 'public/index.html',
-        filename: 'index.html',
+        filename: 'example/index.html',
         minify: {
           collapseWhitespace: true,
           removeComments: true,
@@ -53,6 +60,9 @@ module.exports = (_, argv) => {
         },
       }),
     ],
+    optimization: {
+      minimizer: [new UglifyJsPlugin()],
+    },
   };
 
   if (!isProd) {

@@ -18,7 +18,7 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:import/typescript',
   ],
-  ignorePatterns: ['node_modules/*', '!.prettierrc.js', 'public'],
+  ignorePatterns: ['node_modules/*', '!.prettierrc.js', '*.html'],
   rules: {
     'prettier/prettier': ['error', {}, { usePrettierrc: true }],
     'lines-between-class-members': 'off',

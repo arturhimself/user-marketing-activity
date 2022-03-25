@@ -1,9 +1,9 @@
-import { IStorage } from '../ports/IStorage';
+import { IStorage } from './ports/IStorage';
 
-const STEP_TIME = 1000;
+const STEP_TIME = 10000;
 const DEFAULT_FIRST_STEP = 1;
 
-interface IOptions {
+export interface IOptions {
   time?: number;
   onSuccess: () => void;
 }
@@ -26,6 +26,7 @@ export class App {
       : DEFAULT_FIRST_STEP;
     this.onMouseMove = this.onMouseMove.bind(this);
     this.start();
+    console.log('started');
   }
 
   private start(): void {
