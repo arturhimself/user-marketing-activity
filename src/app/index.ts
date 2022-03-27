@@ -1,3 +1,4 @@
+import { throttle } from '../lib/throttle';
 import { IStorage } from './ports/IStorage';
 
 const STEP_TIME = 10000;
@@ -14,6 +15,11 @@ const DEFAULT_OPTIONS: Required<Pick<IOptions, 'time'>> = {
 export class App {
   private readonly options: Required<IOptions>;
   private readonly stepsAmount: number;
+  private readonly events: Record<string, Array<string>> = {
+    document: ['click', 'mousemove', 'touchmove', 'scroll', 'input'],
+    input: ['focus', 'blur'],
+    button: ['focus', 'blur'],
+  };
   private currentStep: number;
   private wasActivity = false;
   private intervalId: NodeJS.Timer | undefined;
@@ -24,13 +30,17 @@ export class App {
     this.currentStep = this.storageService.hasItem()
       ? Number(this.storageService.getItem())
       : DEFAULT_FIRST_STEP;
-    this.onMouseMove = this.onMouseMove.bind(this);
+
+    if (this.stepsAmount === this.currentStep) {
+      return;
+    }
+
+    this.handleClientActivity = throttle(this.handleClientActivity.bind(this), 500);
     this.start();
-    console.log('started');
   }
 
   private start(): void {
-    this.setListener();
+    this.setListeners();
 
     this.intervalId = setInterval(() => {
       if (this.wasActivity) {
@@ -51,24 +61,37 @@ export class App {
   }
 
   private clear(): void {
-    this.removeListener();
+    this.removeListeners();
     if (this.intervalId) {
       clearInterval(this.intervalId);
     }
-    this.storageService.clear();
   }
 
-  private removeListener(): void {
-    document.removeEventListener('mousemove', this.onMouseMove);
+  private removeListeners(): void {
+    this.handleListeners('remove');
   }
 
-  private setListener(): void {
-    document.addEventListener('mousemove', this.onMouseMove);
+  private setListeners(): void {
+    this.handleListeners('set');
   }
 
-  private onMouseMove(): void {
-    this.wasActivity = true;
+  private handleListeners(action: 'remove' | 'set'): void {
+    const method = action === 'remove' ? 'removeEventListener' : 'addEventListener';
+
+    Object.entries(this.events).forEach(([element, events]) => {
+      events.forEach(event => {
+        if (element === 'document') {
+          document[method](event, this.handleClientActivity);
+        } else {
+          document.querySelector(element)?.[method](event, this.handleClientActivity);
+        }
+      });
+    });
   }
 
-  // @TODO: add forms and buttons events
+  private handleClientActivity(): void {
+    if (!this.wasActivity) {
+      this.wasActivity = true;
+    }
+  }
 }

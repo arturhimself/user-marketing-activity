@@ -12,9 +12,9 @@ module.exports = (_, argv) => {
     entry: './src/main.ts',
     output: {
       path: path.resolve(__dirname, 'build'),
-      filename: isProd ? 'index.js' : 'bundle-[hash].js',
+      filename: isProd ? 'lib.js' : 'bundle-[hash].js',
       library: {
-        name: 'activity',
+        name: 'userMarketingActivity',
         type: 'window',
         export: 'default',
       }
@@ -51,7 +51,7 @@ module.exports = (_, argv) => {
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         template: 'public/index.html',
-        filename: 'example/index.html',
+        filename: 'index.html',
         minify: {
           collapseWhitespace: true,
           removeComments: true,

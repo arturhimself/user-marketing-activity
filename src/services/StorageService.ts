@@ -14,8 +14,4 @@ export class StorageService implements IStorage {
   hasItem(): boolean {
     return Boolean(localStorage.getItem(STORAGE_NAME));
   }
-
-  clear(): void {
-    localStorage.removeItem(STORAGE_NAME);
-  }
 }

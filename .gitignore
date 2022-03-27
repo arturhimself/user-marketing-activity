@@ -1,3 +1,4 @@
 node_modules
 .idea
-build/example
+example/
+build/index.html

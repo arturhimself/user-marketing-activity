@@ -1,12 +1,12 @@
 {
-  "name": "minute-activity",
+  "name": "user-marketing-activity",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Artur Sitnikov<a.sitnikov1@ya.ru> (https://github.com/arturhimself)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/minute-activiy"
+    "url": "https://github.com/arturhimself/user-marketing-activity"
   },
   "type": "module",
   "exports": {
