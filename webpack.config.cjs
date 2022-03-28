@@ -45,6 +45,13 @@ module.exports = (_, argv) => {
           ],
           exclude: /node_modules/,
         },
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+          }
+        }
       ],
     },
     plugins: [
