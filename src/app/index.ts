@@ -43,14 +43,15 @@ export class App {
     this.setListeners();
 
     this.intervalId = setInterval(() => {
+      if (this.currentStep === this.stepsAmount) {
+        this.onSuccess();
+        return;
+      }
+      
       if (this.wasActivity) {
         this.currentStep++;
         this.storageService.setItem(this.currentStep);
         this.wasActivity = false;
-
-        if (this.currentStep === this.stepsAmount) {
-          this.onSuccess();
-        }
       }
     }, STEP_TIME);
   }
