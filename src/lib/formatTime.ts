@@ -1,0 +1,1 @@
+export const formatTime = (time: number) => Number((time / 1000).toFixed());

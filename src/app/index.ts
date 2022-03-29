@@ -1,4 +1,5 @@
 import { throttle } from '../lib/throttle';
+import { formatTime } from '../lib/formatTime';
 import { IStorage } from './ports/IStorage';
 
 const STEP_TIME = 10000;
@@ -7,9 +8,11 @@ const DEFAULT_FIRST_STEP = 1;
 export interface IOptions {
   time?: number;
   onSuccess: () => void;
+  devMode?: boolean;
 }
-const DEFAULT_OPTIONS: Required<Pick<IOptions, 'time'>> = {
+const DEFAULT_OPTIONS: Required<Pick<IOptions, 'time' | 'devMode'>> = {
   time: 60,
+  devMode: false,
 };
 
 export class App {
@@ -23,7 +26,10 @@ export class App {
   private currentStep: number;
   private wasActivity = false;
   private intervalId: NodeJS.Timer | undefined;
-
+  
+  private timeStart: number = 0;
+  private timeEnd: number = 0;
+  
   constructor(options: IOptions, private storageService: IStorage) {
     this.options = { ...DEFAULT_OPTIONS, ...options };
     this.stepsAmount = this.options.time / 10;
@@ -41,6 +47,10 @@ export class App {
 
   private start(): void {
     this.setListeners();
+  
+    if (this.options.devMode) {
+      this.timeStart = performance.now();
+    }
 
     this.intervalId = setInterval(() => {
       if (this.currentStep === this.stepsAmount) {
@@ -59,6 +69,11 @@ export class App {
   private onSuccess(): void {
     this.clear();
     this.options.onSuccess();
+    
+    if (this.options.devMode) {
+      this.timeEnd = performance.now();
+      console.log(`Time: ${formatTime(this.timeEnd - this.timeStart)}s`);
+    }
   }
 
   private clear(): void {
@@ -92,6 +107,10 @@ export class App {
 
   private handleClientActivity(): void {
     if (!this.wasActivity) {
+      if (this.options.devMode) {
+        console.log('Was activity');
+      }
+      
       this.wasActivity = true;
     }
   }

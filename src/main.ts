@@ -10,7 +10,8 @@ if (process.env.NODE_ENV === 'development') {
   console.log('Test plugin');
 
   main({
-    time: 30,
+    time: 20,
+    devMode: true,
     onSuccess() {
       console.log('Goal');
     },
